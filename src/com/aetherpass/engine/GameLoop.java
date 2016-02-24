@@ -1,5 +1,7 @@
-import engine.GameTime;
-import managers.StateManager;
+package com.aetherpass.engine;
+
+import com.aetherpass.Game;
+import com.aetherpass.managers.StateManager;
 
 /**
  * Created by Trent on 2/24/2016.

@@ -1,6 +1,4 @@
-package managers;
-
-import engine.GameTime;
+package com.aetherpass.managers;
 
 import java.awt.*;
 

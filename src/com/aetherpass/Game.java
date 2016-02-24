@@ -1,3 +1,7 @@
+package com.aetherpass;
+
+import com.aetherpass.engine.GameLoop;
+
 import java.awt.*;
 
 /**

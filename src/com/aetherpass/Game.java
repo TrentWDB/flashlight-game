@@ -9,8 +9,8 @@ import java.awt.*;
  * Created by Trent on 2/24/2016.
  */
 public class Game {
-    public static int DEFAULT_WIDTH = 1600;
-    public static int DEFAULT_HEIGHT = 800;
+    public static final int DEFAULT_WIDTH = 1600;
+    public static final int DEFAULT_HEIGHT = 800;
     public static int width;
     public static int height;
 

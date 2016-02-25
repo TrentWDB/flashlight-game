@@ -24,7 +24,7 @@ public class GameLoop implements Runnable {
 
             GameInput.clearDeltas();
 
-            /*
+
             int sleepTime = Math.max(17 - GameTime.getTimeSinceLastUpdate(), 0);
 
             try {
@@ -32,7 +32,7 @@ public class GameLoop implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            */
+
         }
     }
 }

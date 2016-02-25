@@ -22,6 +22,7 @@ public class MainFrame extends Canvas {
         GameInput gameInput = new GameInput();
         addKeyListener(gameInput);
         addMouseListener(gameInput);
+        addMouseMotionListener(gameInput);
     }
 
     public Graphics2D resizeGraphics(int width, int height) {

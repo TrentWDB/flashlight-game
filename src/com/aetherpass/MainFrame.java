@@ -1,5 +1,7 @@
 package com.aetherpass;
 
+import com.aetherpass.engine.GameInput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,6 +18,10 @@ public class MainFrame extends Canvas {
 
     public MainFrame() {
         setPreferredSize(new Dimension(Game.DEFAULT_WIDTH, Game.DEFAULT_HEIGHT));
+
+        GameInput gameInput = new GameInput();
+        addKeyListener(gameInput);
+        addMouseListener(gameInput);
     }
 
     public Graphics2D resizeGraphics(int width, int height) {
@@ -33,11 +39,6 @@ public class MainFrame extends Canvas {
     @Override
     public void update(Graphics g) {
         paint(g);
-    }
-
-    public boolean processEvent(Event e) {
-        System.out.println(e);
-        return false;
     }
 
     public static void main(String[] args) {

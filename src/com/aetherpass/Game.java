@@ -1,6 +1,7 @@
 package com.aetherpass;
 
 import com.aetherpass.engine.GameLoop;
+import com.aetherpass.managers.StateManager;
 
 import java.awt.*;
 
@@ -10,6 +11,8 @@ import java.awt.*;
 public class Game {
     public static int DEFAULT_WIDTH = 1600;
     public static int DEFAULT_HEIGHT = 800;
+    public static int width;
+    public static int height;
 
     private MainFrame mainFrame;
     private GameLoop gameLoop;
@@ -23,11 +26,19 @@ public class Game {
     }
 
     private void initialize() {
-        resize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        width = DEFAULT_WIDTH;
+        height = DEFAULT_HEIGHT;
+
+        StateManager.setState(StateManager.STATE_GAME);
+
+        resize(width, height);
         new Thread(gameLoop).start();
     }
 
     public void resize(int width, int height) {
+        Game.width = width;
+        Game.height = height;
+
         graphics = mainFrame.resizeGraphics(width, height);
         mainFrame.setSize(new Dimension(width, height));
     }

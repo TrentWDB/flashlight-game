@@ -2,6 +2,7 @@ package com.aetherpass.states;
 
 import com.aetherpass.Game;
 import com.aetherpass.managers.PlayerManager;
+import com.aetherpass.utils.MathUtils;
 
 import java.awt.*;
 

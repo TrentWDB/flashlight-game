@@ -1,7 +1,14 @@
 package com.aetherpass.entities;
 
+import com.aetherpass.Game;
+import com.aetherpass.engine.GameInput;
+import com.aetherpass.utils.GraphicsUtils;
+import com.aetherpass.utils.MathUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -41,6 +48,12 @@ public class Human implements Player {
     private double velY;
     private double angle;
 
+    private double feetAngle;
+    private double bodyAngle;
+
+    // this is the closest right angle to the players aim point, either 0, pi / 2, pi, or -pi / 2
+    private double closestRightAngle;
+
     static {
         animationFeetImages.add(ANIMATION_STATE_FEET_IDLE, new ArrayList<BufferedImage>());
         animationFeetImages.add(ANIMATION_STATE_FEET_WALK_FORWARD, new ArrayList<BufferedImage>());
@@ -66,6 +79,25 @@ public class Human implements Player {
     @Override
     public void update(double delta) {
         updateAnimation(delta);
+
+        // set angles
+        angle = Math.atan2(velY, velX);
+        // calculate body angle
+        bodyAngle = Math.atan2(GameInput.mousePos[1] - Game.height / 2, GameInput.mousePos[0] - Game.width / 2);
+        // calculate feet angle
+        if (feetAnimationState == ANIMATION_STATE_FEET_RUN_FORWARD || feetAnimationState == ANIMATION_STATE_FEET_WALK_FORWARD) {
+            // youre moving forward
+            feetAngle = Math.atan2(velY, velX);
+        } else if (feetAnimationState == ANIMATION_STATE_FEET_WALK_BACKWARD) {
+            // youre moving backward
+            feetAngle = Math.atan2(velY, velX) + Math.PI;
+        } else if (feetAnimationState == ANIMATION_STATE_FEET_STRAFE_RIGHT) {
+            // youre moving right
+            feetAngle = Math.atan2(velY, velX) - Math.PI / 2;
+        } else if (feetAnimationState == ANIMATION_STATE_FEET_STRAFE_LEFT) {
+            // youre moving left
+            feetAngle = Math.atan2(velY, velX) + Math.PI / 2;
+        }
     }
 
     @Override
@@ -75,14 +107,50 @@ public class Human implements Player {
 
     private void updateAnimation(double delta) {
         if (velX == 0 && velY == 0) {
-            if (feetAnimationState != ANIMATION_STATE_FEET_IDLE) {
-                feetAnimationState = ANIMATION_STATE_FEET_IDLE;
-                feetAnimationTime = 0;
-            }
+            // youre idle
+            setFeetAnimationState(ANIMATION_STATE_FEET_IDLE);
+            setPlayerAnimationState(ANIMATION_STATE_PLAYER_IDLE);
+        } else {
+            // youre moving
+            double forwardAngle = Math.atan2(GameInput.mousePos[1] - Game.height / 2, GameInput.mousePos[0] - Game.width / 2);
+            double backwardAngle = forwardAngle + Math.PI;
+            double rightAngle = forwardAngle + Math.PI / 2;
+            double leftAngle = forwardAngle - Math.PI / 2;
 
-            if (playerAnimationState != ANIMATION_STATE_PLAYER_IDLE) {
-                playerAnimationState = ANIMATION_STATE_PLAYER_IDLE;
-                playerAnimationTime = 0;
+            double velAngle = Math.atan2(velY, velX);
+
+            double angleFromVelToForward = MathUtils.smallestAngleBetweenAngles(velAngle, forwardAngle);
+            double angleFromVelToBackward = MathUtils.smallestAngleBetweenAngles(velAngle, backwardAngle);
+            double angleFromVelToRight = MathUtils.smallestAngleBetweenAngles(velAngle, rightAngle);
+            double angleFromVelToLeft = MathUtils.smallestAngleBetweenAngles(velAngle, leftAngle);
+
+            if (Math.abs(angleFromVelToForward) < Math.abs(angleFromVelToBackward) &&
+                    Math.abs(angleFromVelToForward) < Math.abs(angleFromVelToRight) &&
+                    Math.abs(angleFromVelToForward) < Math.abs(angleFromVelToLeft)) {
+                // youre walking forward
+                setFeetAnimationState(ANIMATION_STATE_FEET_RUN_FORWARD);
+                setPlayerAnimationState(ANIMATION_STATE_PLAYER_MOVE);
+            }
+            if (Math.abs(angleFromVelToBackward) < Math.abs(angleFromVelToForward) &&
+                    Math.abs(angleFromVelToBackward) < Math.abs(angleFromVelToRight) &&
+                    Math.abs(angleFromVelToBackward) < Math.abs(angleFromVelToLeft)) {
+                // youre walking backward
+                setFeetAnimationState(ANIMATION_STATE_FEET_WALK_BACKWARD);
+                setPlayerAnimationState(ANIMATION_STATE_PLAYER_MOVE);
+            }
+            if (Math.abs(angleFromVelToRight) < Math.abs(angleFromVelToForward) &&
+                    Math.abs(angleFromVelToRight) < Math.abs(angleFromVelToBackward) &&
+                    Math.abs(angleFromVelToRight) < Math.abs(angleFromVelToLeft)) {
+                // youre walking right
+                setFeetAnimationState(ANIMATION_STATE_FEET_STRAFE_RIGHT);
+                setPlayerAnimationState(ANIMATION_STATE_PLAYER_MOVE);
+            }
+            if (Math.abs(angleFromVelToLeft) < Math.abs(angleFromVelToForward) &&
+                    Math.abs(angleFromVelToLeft) < Math.abs(angleFromVelToBackward) &&
+                    Math.abs(angleFromVelToLeft) < Math.abs(angleFromVelToRight)) {
+                // youre walking left
+                setFeetAnimationState(ANIMATION_STATE_FEET_STRAFE_LEFT);
+                setPlayerAnimationState(ANIMATION_STATE_PLAYER_MOVE);
             }
         }
 
@@ -95,19 +163,42 @@ public class Human implements Player {
         int feetWidth = feetImage.getWidth() / 2;
         int feetHeight = feetImage.getHeight() / 2;
 
+        AffineTransform originalFeetTransform = GraphicsUtils.rotateAroundPoint(g, feetAngle, Game.width / 2, Game.height / 2);
+
         g.drawImage(feetImage, (int) (posX - feetWidth / 2), (int) (posY - feetHeight / 2), feetWidth, feetHeight, null);
+
+        g.setTransform(originalFeetTransform);
+
 
         BufferedImage playerImage = getAnimationImage(playerAnimationTime, animationPlayerImages.get(playerAnimationState));
         int playerWidth = playerImage.getWidth() / 2;
         int playerHeight = playerImage.getHeight() / 2;
 
+        AffineTransform originalPlayerTransform = GraphicsUtils.rotateAroundPoint(g, bodyAngle, Game.width / 2, Game.height / 2);
+
         g.drawImage(playerImage, (int) (posX - playerWidth / 2), (int) (posY - playerHeight / 2), playerWidth, playerHeight, null);
+
+        g.setTransform(originalPlayerTransform);
     }
 
     private BufferedImage getAnimationImage(double time, ArrayList<BufferedImage> imageList) {
         int frame = (int) (Math.round(time / 0.05) % imageList.size());
 
         return imageList.get(frame);
+    }
+
+    private void setFeetAnimationState(int state) {
+        if (feetAnimationState != state) {
+            feetAnimationState = state;
+            feetAnimationTime = 0;
+        }
+    }
+
+    private void setPlayerAnimationState(int state) {
+        if (playerAnimationState != state) {
+            playerAnimationState = state;
+            playerAnimationTime = 0;
+        }
     }
 
     private static void loadAnimation() throws IOException {

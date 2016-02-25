@@ -7,13 +7,28 @@ public class MathUtils {
     public static final double EPSILON = 0.000001;
 
     /**
-     * Returns the smallest angle to get you from fromAngle to toAngle.
-     * @param fromAngle the angle you're going from
-     * @param toAngle the angle you're going to
-     * @return the smallest angle
+     * Returns true if the given point is inside the concave polygon.
+     * @param point the point to be tested
+     * @param polygon the polygon to be tested against
+     * @return whether or not the point is inside the polygon
      */
-    public static double smallestAngleBetweenAngles(double fromAngle, double toAngle) {
-        return unsignedModulus(toAngle - fromAngle + Math.PI, Math.PI * 2) - Math.PI;
+    public static boolean isPointInsideConcavePolygon(double[] point, double[][] polygon) {
+        int i = 0;
+        int j = polygon.length - 1;
+        boolean oddNodes = false;
+
+        for (i = 0; i < polygon.length; i++) {
+            if (polygon[i][1] < point[1] && polygon[j][1] >= point[1] ||
+                    polygon[j][1] < point[1] && polygon[i][1] >= point[1]) {
+                if (polygon[i][0] + (point[1] - polygon[i][1]) / (polygon[j][1] - polygon[i][1]) * (polygon[j][0] - polygon[i][0]) < point[0]) {
+                    oddNodes = !oddNodes;
+                }
+            }
+
+            j = i;
+        }
+
+        return oddNodes;
     }
 
     /**
@@ -54,6 +69,16 @@ public class MathUtils {
         returnPoint[1] = line[0][1] + t * (line[1][1] - line[0][1]);
 
         return returnPoint;
+    }
+
+    /**
+     * Returns the smallest angle to get you from fromAngle to toAngle.
+     * @param fromAngle the angle you're going from
+     * @param toAngle the angle you're going to
+     * @return the smallest angle
+     */
+    public static double smallestAngleBetweenAngles(double fromAngle, double toAngle) {
+        return unsignedModulus(toAngle - fromAngle + Math.PI, Math.PI * 2) - Math.PI;
     }
 
     /**

@@ -4,6 +4,7 @@ import com.aetherpass.engine.GameLoop;
 import com.aetherpass.managers.StateManager;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by Trent on 2/24/2016.

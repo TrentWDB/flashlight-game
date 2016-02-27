@@ -97,6 +97,9 @@ public class Human implements Player {
         } else if (feetAnimationState == ANIMATION_STATE_FEET_STRAFE_LEFT) {
             // youre moving left
             feetAngle = Math.atan2(velY, velX) + Math.PI / 2;
+        } else if (feetAnimationState == ANIMATION_STATE_FEET_IDLE) {
+            // youre idle
+            feetAngle = Math.round(bodyAngle / (Math.PI / 4)) * (Math.PI / 4);
         }
     }
 

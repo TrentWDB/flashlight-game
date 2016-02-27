@@ -9,29 +9,9 @@ import java.awt.*;
  * Created by Trent on 2/25/2016.
  */
 public class Polygon extends LevelObject {
-    private int selectedVertex = -1;
-
     public Polygon(int x, int y) {
         super(x, y);
         type = LevelEditor.POLYGON;
-    }
-
-    public void move(int x, int y) {
-        if (selectedVertex == -1) {
-            for (Point p : points) {
-                p.x += x;
-                p.y += y;
-
-                p.x = LevelEditor.snap(p.x);
-                p.y = LevelEditor.snap(p.y);
-            }
-        } else {
-            points.get(selectedVertex).x += x;
-            points.get(selectedVertex).y += y;
-
-            points.get(selectedVertex).x = LevelEditor.snap(points.get(selectedVertex).x);
-            points.get(selectedVertex).y = LevelEditor.snap(points.get(selectedVertex).y);
-        }
     }
 
     public boolean contains(int x, int y) {

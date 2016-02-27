@@ -33,7 +33,7 @@ public class LevelEditor extends Applet implements Runnable {
 	private ArrayList<LevelObject> level = new ArrayList<LevelObject>();
 	
 	public static String tool;
-	
+
 	public static int initMouseX;
 	public static int initMouseY;
 	public static int mouseX;
@@ -42,7 +42,7 @@ public class LevelEditor extends Applet implements Runnable {
 	private boolean mouseAntiSpam;
 
 	private boolean keyAntispam;
-	private static boolean snapping;
+	public static boolean snapping;
 	
 	private int editing = -1;
 	
@@ -90,6 +90,7 @@ public class LevelEditor extends Applet implements Runnable {
 		}
 
 		if (keys[KEY_S] && keyAntispam) {
+			editing = -1;
 			snapping = !snapping;
 		}
 		
@@ -142,6 +143,9 @@ public class LevelEditor extends Applet implements Runnable {
 		if (tool.equals("Move")) {
 			if (mouseDown) {
 				if (mouseAntiSpam && !inBox) {
+					// let everything know that we clicked
+					level.forEach(LevelObject::clicked);
+
 					editing = -2;
 					LevelObject obj = null;
 					for (int i = level.size() - 1; i >= 0; i--) {
@@ -157,7 +161,7 @@ public class LevelEditor extends Applet implements Runnable {
 					posY -= (mouseY - oldMouseY);
 				}
 				if (editing >= 0) {
-					level.get(editing).move(mouseX - oldMouseX, mouseY - oldMouseY);
+					level.get(editing).move(mouseX + posX, mouseY + posX);
 				}
 			}
 		} else if (tool.equals("Wall")) {
@@ -230,7 +234,7 @@ public class LevelEditor extends Applet implements Runnable {
 			} else {
 				if (mouseDown && editing != -1) {
 					LevelObject obj = level.get(editing);
-					obj.move(mouseX - oldMouseX, mouseY - oldMouseY);
+					obj.move(mouseX + posX, mouseY + posX);
 				}
 			}
 		}

@@ -84,11 +84,62 @@ public class LevelObject {
 	public void draw(Graphics g, int x, int y) {
 
 	}
+
+	public boolean shouldRemove() {
+		return false;
+	}
+
+	protected String getType() {
+		switch (type) {
+			case LevelEditor.LIGHT:
+				return "light";
+
+			case LevelEditor.POLYGON:
+				return "polygon";
+
+			case LevelEditor.SPAWN:
+				return "spawn";
+
+			case LevelEditor.WALL:
+				return "rectangle";
+		}
+
+		return "null";
+	}
+	public String serializeWithPoints(ArrayList<Point> pointList) {
+		// I don't want to mess with a json library for such a simple serialization
+		StringBuilder s = new StringBuilder();
+
+		// type
+		s.append("{");
+		s.append("\"type\":\"");
+		s.append(getType());
+		s.append("\",");
+
+		// vertices
+		s.append("\"vertices\": [");
+		for (int i = 0; i < pointList.size(); i++) {
+			s.append("[");
+			s.append(pointList.get(i).x);
+			s.append(",");
+			s.append(pointList.get(i).y);
+			s.append("]");
+
+			if (i < pointList.size() - 1) {
+				s.append(",");
+			}
+		}
+		s.append("],");
+
+		// collidable
+		s.append("\"collidable\":true");
+
+		s.append("}");
+
+		return s.toString();
+	}
 	
 	public String serialize() {
-		String s = "";
-
-		
-		return s;
+		return serializeWithPoints(points);
 	}
 }

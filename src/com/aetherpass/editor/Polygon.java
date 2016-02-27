@@ -1,9 +1,9 @@
 package com.aetherpass.editor;
 
-import com.aetherpass.engine.Level;
 import com.aetherpass.utils.MathUtils;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Trent on 2/25/2016.
@@ -98,6 +98,10 @@ public class Polygon extends LevelObject {
         g.fillPolygon(xPoints, yPoints, points.size());
     }
 
+    public boolean shouldRemove() {
+        return points.size() < 3;
+    }
+
     public boolean removeSelectedVertex() {
         if (points.size() <= 3) {
             return false;
@@ -111,5 +115,32 @@ public class Polygon extends LevelObject {
         }
 
         return false;
+    }
+
+    public String serialize() {
+        ArrayList<Point> pointList = new ArrayList<Point>();
+
+        int value = 0;
+        for (int i = 0; i < points.size(); i++) {
+            int nextIndex = (i + 1) % points.size();
+            Point currentPoint = points.get(i);
+            Point nextPoint = points.get(nextIndex);
+
+            value += (nextPoint.x - currentPoint.x) * (nextPoint.y + currentPoint.y);
+        }
+
+        if (value > 0) {
+            for (Point p : points) {
+                pointList.add(p);
+            }
+        } else if (value < 0) {
+            for (int i = points.size() - 1; i >= 0; i--) {
+                pointList.add(points.get(i));
+            }
+        } else {
+            System.err.println("Something is very wrong. The area of the concave polygon is zero.");
+        }
+
+        return serializeWithPoints(pointList);
     }
 }

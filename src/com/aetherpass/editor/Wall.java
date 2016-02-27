@@ -1,6 +1,7 @@
 package com.aetherpass.editor;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class Wall extends Polygon {
@@ -84,5 +85,23 @@ public class Wall extends Polygon {
 		g.setColor(new Color(100, 0, 0));
 
 		g.fillRect(points.get(0).x + x, points.get(0).y + y, points.get(1).x - points.get(0).x, points.get(1).y - points.get(0).y);
+	}
+
+	public boolean shouldRemove() {
+		return points.size() < 2;
+	}
+
+	public String serialize() {
+		ArrayList<Point> pointList = new ArrayList<Point>();
+
+		Point p1 = points.get(0);
+		Point p2 = points.get(1);
+
+		pointList.add(new Point(Math.min(p1.x, p2.x), Math.min(p1.y, p2.y)));
+		pointList.add(new Point(Math.min(p1.x, p2.x), Math.max(p1.y, p2.y)));
+		pointList.add(new Point(Math.max(p1.x, p2.x), Math.max(p1.y, p2.y)));
+		pointList.add(new Point(Math.max(p1.x, p2.x), Math.min(p1.y, p2.y)));
+
+		return serializeWithPoints(pointList);
 	}
 }

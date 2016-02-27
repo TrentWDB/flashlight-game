@@ -1,5 +1,5 @@
 .idea
 light-test
-
+out
 *.class
 *.iml

@@ -1,10 +1,12 @@
 package com.aetherpass;
 
 import com.aetherpass.engine.GameLoop;
+import com.aetherpass.level.Level;
 import com.aetherpass.managers.StateManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * Created by Trent on 2/24/2016.
@@ -29,6 +31,8 @@ public class Game {
     private void initialize() {
         width = DEFAULT_WIDTH;
         height = DEFAULT_HEIGHT;
+
+        Level.loadLevel(new File("level.json"));
 
         StateManager.setState(StateManager.STATE_GAME);
 

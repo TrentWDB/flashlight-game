@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import java.io.*;
 import java.util.ArrayList;
 
 public class LevelEditor extends Applet implements Runnable {
@@ -53,7 +54,7 @@ public class LevelEditor extends Applet implements Runnable {
 	public static final int LIGHT = 2;
 	public static final int POLYGON = 3;
 	
-	public static final int GUY_WIDTH = 60;
+	public static final int GUY_WIDTH = 30;
 	
 	public void init() {
 		windowWidth = (int) screenSize.getWidth();
@@ -93,6 +94,13 @@ public class LevelEditor extends Applet implements Runnable {
 			editing = -1;
 			snapping = !snapping;
 		}
+
+		// quick and easy way to remove things that got added accidentally that aren't visible due to too few vertices
+		if (editing < 0 && level.size() > 0) {
+			if (level.get(level.size() - 1).shouldRemove()) {
+				level.remove(level.size() - 1);
+			}
+		}
 		
 		if (mouseAntiSpam) {
 			if (mouseDown) {
@@ -103,17 +111,38 @@ public class LevelEditor extends Applet implements Runnable {
 					if (tools.get(i).contains(mouseX, mouseY)) {
 						tool = tools.get(i).tool;
 						editing = -1;
-						
+
 						if (tool.equals("Export")) {
-							String str = "";
-							
+							StringBuilder s = new StringBuilder();
+
+							s.append("[");
+
 							for (int b = 0; b < level.size(); b++) {
-								str += level.get(b).serialize();
+								s.append(level.get(b).serialize());
+
+								if (b < level.size() - 1) {
+									s.append(",");
+								}
 							}
-							
+
+							s.append("]");
+
+//							File file = new File("level.json");
+//							PrintWriter pw = null;
+//							try {
+//								pw = new PrintWriter(new FileOutputStream(file));
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}
+//							System.out.println("here we go");
+//							pw.println(s.toString());
+//							pw.flush();
+//							pw.close();
+//							System.out.println("done " + file.getAbsolutePath());
+
 							Toolkit toolkit = Toolkit.getDefaultToolkit();
 							Clipboard clipboard = toolkit.getSystemClipboard();
-							StringSelection strSel = new StringSelection(str);
+							StringSelection strSel = new StringSelection(s.toString());
 							clipboard.setContents(strSel, null);
 						}
 						break;
@@ -121,9 +150,9 @@ public class LevelEditor extends Applet implements Runnable {
 				}
 			}
 		}
-		
+
 		boolean inBox = false;
-		
+
 		if (mouseX < 63) {
 			if (mouseY > 47 && mouseY < 513) {
 				inBox = true;
@@ -160,7 +189,7 @@ public class LevelEditor extends Applet implements Runnable {
 					posX -= (mouseX - oldMouseX);
 					posY -= (mouseY - oldMouseY);
 				}
-				if (editing >= 0) {
+				if (editing >= 0 && !inBox) {
 					level.get(editing).move(mouseX + posX, mouseY + posX);
 				}
 			}
@@ -216,26 +245,19 @@ public class LevelEditor extends Applet implements Runnable {
 		} else if (tool.equals("Light")) {
 			
 		} else if (tool.equals("Spawn")) {
-			if (mouseAntiSpam && !inBox) {
-				if (mouseDown) {
-					int x1 = LevelEditor.snap(mouseX + posX);
-					int y1 = LevelEditor.snap(mouseY + posY);
-					
-					level.add(new Spawn(x1, y1));
-					
-					for (int i = 0; i < level.size() - 1; i++) {
-						if (level.get(i) instanceof Spawn) {
-							level.remove(i);
-						}
+			if (mouseDown && mouseAntiSpam && !inBox) {
+				int x1 = LevelEditor.snap(mouseX + posX);
+				int y1 = LevelEditor.snap(mouseY + posY);
+
+				level.add(new Spawn(x1, y1));
+
+				for (int i = 0; i < level.size() - 1; i++) {
+					if (level.get(i) instanceof Spawn) {
+						level.remove(i);
 					}
-					
-					editing = level.size() - 1;
 				}
-			} else {
-				if (mouseDown && editing != -1) {
-					LevelObject obj = level.get(editing);
-					obj.move(mouseX + posX, mouseY + posX);
-				}
+
+				editing = level.size() - 1;
 			}
 		}
 		
@@ -244,7 +266,7 @@ public class LevelEditor extends Applet implements Runnable {
 	}
 	
 	public void paint(Graphics g) {
-		drawGrid(graphics, 75, 75, 5);
+		drawGrid(graphics, 72, 72, 5);
 		
 		drawLevel(graphics);
 		
@@ -315,19 +337,30 @@ public class LevelEditor extends Applet implements Runnable {
 	public void drawSideBar(Graphics g) {
 		int width = 60;
 		int height = 460;
+		int outlineThickness = 2;
 		
-		g.setColor(new Color(150, 150, 150));
+		g.setColor(new Color(100, 100, 100));
+		// main tool background
 		g.fillRect(0, 50, width, height);
+		// tool string background
 		g.fillRect(0, 0, 80, 16);
+		// snapped on off background
+		g.fillRect(0, getHeight() - 16, 80, 16);
 		
-		g.setColor(new Color(100, 0, 0));
-		g.fillRect(0, 47, width, 3);
-		g.fillRect(width, 47, 3, height + 6);
-		g.fillRect(0, height + 50, width, 3);
-		g.fillRect(80, 0, 3, 16);
-		g.fillRect(0, 16, 83, 3);
-		
+		g.setColor(new Color(255, 255, 255));
+		// main tool outline
+		g.fillRect(0, 50 - outlineThickness, width + outlineThickness, outlineThickness);
+		g.fillRect(width, 50, outlineThickness, height);
+		g.fillRect(0, 50 + height, width + outlineThickness, outlineThickness);
+		// tool string outline
+		g.fillRect(80, 0, outlineThickness, 16);
+		g.fillRect(0, 16, 80 + outlineThickness, 2);
+		// snapping on off outline
+		g.fillRect(80, getHeight() - 16, outlineThickness, 16);
+		g.fillRect(0, getHeight() - 16 - outlineThickness, 80 + outlineThickness, outlineThickness);
+
 		g.drawString(tool, 5, 13);
+		g.drawString(snapping ? "snapping on" : "snapping off", 5, getHeight() - 16 + 13);
 		
 		for (int i = 0; i < tools.size(); i++) {
 			tools.get(i).draw(g);
@@ -336,7 +369,7 @@ public class LevelEditor extends Applet implements Runnable {
 	
 	public void drawGrid(Graphics g, int width, int height, int lineWidth) {
 		g.setColor(new Color(50, 50, 50));
-		g.fillRect(0, 0, windowWidth, windowHeight);
+		g.fillRect(0, 0, getWidth(), getHeight());
 
 		g.setColor(new Color(75, 75, 75));
 		for (int x = (int) (-posX % (width + lineWidth)); x < windowWidth; x += width + lineWidth) {
@@ -353,11 +386,6 @@ public class LevelEditor extends Applet implements Runnable {
 		}
 
 		return (int) Math.round((double) n / SNAP_AMOUNT) * SNAP_AMOUNT;
-	}
-	
-	public void drawGuy(Graphics g) {
-		g.setColor(Color.BLACK);
-		g.fillOval(windowWidth / 2 - 22, windowHeight / 2 - 22, 55, 55);
 	}
 	
 	public void run() {

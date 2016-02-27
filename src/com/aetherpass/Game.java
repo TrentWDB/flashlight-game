@@ -2,6 +2,7 @@ package com.aetherpass;
 
 import com.aetherpass.engine.GameLoop;
 import com.aetherpass.level.Level;
+import com.aetherpass.managers.LevelManager;
 import com.aetherpass.managers.StateManager;
 
 import java.awt.*;
@@ -32,7 +33,7 @@ public class Game {
         width = DEFAULT_WIDTH;
         height = DEFAULT_HEIGHT;
 
-        Level.loadLevel(new File("level.json"));
+        LevelManager.loadLevel(new File("level.json"));
 
         StateManager.setState(StateManager.STATE_GAME);
 

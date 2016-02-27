@@ -1,1 +1,97 @@
-[{"type":"rectangle","vertices": [[518,161],[518,315],[848,315],[848,161]],"collidable":true},{"type":"rectangle","vertices": [[806,283],[806,478],[1179,478],[1179,283]],"collidable":true},{"type":"polygon","vertices": [[1068,612],[1248,612],[1308,540],[1308,372],[1236,372],[1236,540],[1068,540]],"collidable":true},{"type":"polygon","vertices": [[684,420],[768,564],[876,516],[756,420]],"collidable":true},{"type":"polygon","vertices": [[548,300],[434,457],[447,467],[571,302]],"collidable":true},{"type":"polygon","vertices": [[543,337],[546,470],[578,467]],"collidable":true},{"type":"polygon","vertices": [[426,327],[454,339],[500,191]],"collidable":true},{"type":"rectangle","vertices": [[904,70],[904,255],[935,255],[935,70]],"collidable":true},{"type":"polygon","vertices": [[1266,574],[1374,684],[1380,676],[1273,565]],"collidable":true},{"type":"polygon","vertices": [[367,161],[209,108],[107,328],[177,446],[309,374],[280,254],[352,238]],"collidable":true}]
+{
+  "walls": [{
+    "type": "rectangle",
+    "vertices": [
+      [518, 161],
+      [518, 315],
+      [848, 315],
+      [848, 161]
+    ],
+    "collidable": true
+  }, {
+    "type": "rectangle",
+    "vertices": [
+      [806, 283],
+      [806, 478],
+      [1179, 478],
+      [1179, 283]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [1068, 612],
+      [1248, 612],
+      [1308, 540],
+      [1308, 372],
+      [1236, 372],
+      [1236, 540],
+      [1068, 540]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [684, 420],
+      [768, 564],
+      [876, 516],
+      [756, 420]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [548, 300],
+      [434, 457],
+      [447, 467],
+      [571, 302]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [543, 337],
+      [546, 470],
+      [578, 467]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [426, 327],
+      [454, 339],
+      [500, 191]
+    ],
+    "collidable": true
+  }, {
+    "type": "rectangle",
+    "vertices": [
+      [904, 70],
+      [904, 255],
+      [935, 255],
+      [935, 70]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [1266, 574],
+      [1374, 684],
+      [1380, 676],
+      [1273, 565]
+    ],
+    "collidable": true
+  }, {
+    "type": "polygon",
+    "vertices": [
+      [367, 161],
+      [209, 108],
+      [107, 328],
+      [177, 446],
+      [309, 374],
+      [280, 254],
+      [352, 238]
+    ],
+    "collidable": true
+  }]
+}

@@ -115,7 +115,8 @@ public class LevelEditor extends Applet implements Runnable {
 						if (tool.equals("Export")) {
 							StringBuilder s = new StringBuilder();
 
-							s.append("[");
+							s.append("{");
+							s.append("\"walls\":[");
 
 							for (int b = 0; b < level.size(); b++) {
 								s.append(level.get(b).serialize());
@@ -126,19 +127,7 @@ public class LevelEditor extends Applet implements Runnable {
 							}
 
 							s.append("]");
-
-//							File file = new File("level.json");
-//							PrintWriter pw = null;
-//							try {
-//								pw = new PrintWriter(new FileOutputStream(file));
-//							} catch (IOException e) {
-//								e.printStackTrace();
-//							}
-//							System.out.println("here we go");
-//							pw.println(s.toString());
-//							pw.flush();
-//							pw.close();
-//							System.out.println("done " + file.getAbsolutePath());
+							s.append("}");
 
 							Toolkit toolkit = Toolkit.getDefaultToolkit();
 							Clipboard clipboard = toolkit.getSystemClipboard();

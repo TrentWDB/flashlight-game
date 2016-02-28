@@ -8,6 +8,7 @@ public class Wall extends Polygon {
 	public Wall(int x1, int y1) {
 		super(x1, y1);
 		type = LevelEditor.WALL;
+		collidable = true;
 	}
 	
 	public boolean contains(int x, int y) {

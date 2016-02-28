@@ -162,6 +162,22 @@ public class Human implements Player {
     }
 
     private void renderPlayer(Graphics2D g) {
+        g.setColor(Color.WHITE);
+
+        AffineTransform originalDebuggingTransform = GraphicsUtils.rotateAroundPoint(g, bodyAngle, Game.width / 2, Game.height / 2);
+
+        g.fillOval(Game.width / 2 - 30, Game.height / 2 - 30, 60, 60);
+        int[] xPoints = {Game.width / 2, Game.width / 2 + 40, Game.width / 2};
+        int[] yPoints = {Game.height / 2 - 10, Game.height / 2, Game.height / 2 + 10};
+        g.fillPolygon(xPoints, yPoints, xPoints.length);
+
+        g.setTransform(originalDebuggingTransform);
+
+        // returning here because I only want a little circle for debugging purposes
+        if (true) {
+            return;
+        }
+
         BufferedImage feetImage = getAnimationImage(feetAnimationTime, animationFeetImages.get(feetAnimationState));
         int feetWidth = feetImage.getWidth() / 2;
         int feetHeight = feetImage.getHeight() / 2;

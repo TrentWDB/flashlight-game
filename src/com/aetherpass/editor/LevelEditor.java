@@ -116,17 +116,19 @@ public class LevelEditor extends Applet implements Runnable {
 							StringBuilder s = new StringBuilder();
 
 							s.append("{");
-							s.append("\"walls\":[");
 
+							s.append("\"walls\":[");
 							for (int b = 0; b < level.size(); b++) {
-								s.append(level.get(b).serialize());
+								if (level.get(b).collidable()) {
+									s.append(level.get(b).serialize());
+								}
 
 								if (b < level.size() - 1) {
 									s.append(",");
 								}
 							}
-
 							s.append("]");
+
 							s.append("}");
 
 							Toolkit toolkit = Toolkit.getDefaultToolkit();

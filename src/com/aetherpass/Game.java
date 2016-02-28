@@ -4,6 +4,7 @@ import com.aetherpass.engine.GameLoop;
 import com.aetherpass.level.Level;
 import com.aetherpass.managers.LevelManager;
 import com.aetherpass.managers.StateManager;
+import com.aetherpass.states.GameState;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -46,6 +47,12 @@ public class Game {
         Game.height = height;
 
         graphics = mainFrame.resizeGraphics(width, height);
+
+        RenderingHints antiAliasRenderingHint = new RenderingHints(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics.setRenderingHints(antiAliasRenderingHint);
+
         mainFrame.setSize(new Dimension(width, height));
     }
 

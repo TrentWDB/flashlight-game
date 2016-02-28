@@ -12,6 +12,7 @@ public class Polygon extends LevelObject {
     public Polygon(int x, int y) {
         super(x, y);
         type = LevelEditor.POLYGON;
+        collidable = true;
     }
 
     public boolean contains(int x, int y) {

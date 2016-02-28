@@ -1,7 +1,8 @@
 package com.aetherpass.managers;
 
-import com.aetherpass.level.Level;
+import com.aetherpass.level.*;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,7 +16,9 @@ public class LevelManager {
 
     public static void loadLevel(File file) {
         try {
-            level = new Gson().fromJson(new FileReader(file), Level.class);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Wall.class, new WallDeserializer());
+            level = gsonBuilder.create().fromJson(new FileReader(file), Level.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

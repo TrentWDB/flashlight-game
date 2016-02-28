@@ -10,6 +10,7 @@ public class LevelObject {
 	public double angle;
 	
 	public int type;
+	protected boolean collidable;
 
 	protected int selectedVertex = -1;
 
@@ -106,6 +107,11 @@ public class LevelObject {
 
 		return "null";
 	}
+
+	public boolean collidable() {
+		return collidable;
+	}
+
 	public String serializeWithPoints(ArrayList<Point> pointList) {
 		// I don't want to mess with a json library for such a simple serialization
 		StringBuilder s = new StringBuilder();
@@ -129,10 +135,7 @@ public class LevelObject {
 				s.append(",");
 			}
 		}
-		s.append("],");
-
-		// collidable
-		s.append("\"collidable\":true");
+		s.append("]");
 
 		s.append("}");
 

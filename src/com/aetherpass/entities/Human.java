@@ -159,21 +159,21 @@ public class Human extends Player {
     }
 
     private void renderPlayer(Graphics2D g) {
-        g.setColor(Color.WHITE);
-
-        AffineTransform originalDebuggingTransform = GraphicsUtils.rotateAroundPoint(g, bodyAngle, Game.width / 2, Game.height / 2);
-
-        g.fillOval(Game.width / 2 - PLAYER_RADIUS, Game.height / 2 - PLAYER_RADIUS, PLAYER_RADIUS * 2, PLAYER_RADIUS * 2);
-        int[] xPoints = {Game.width / 2, Game.width / 2 + PLAYER_RADIUS + 10, Game.width / 2};
-        int[] yPoints = {Game.height / 2 - 10, Game.height / 2, Game.height / 2 + 10};
-        g.fillPolygon(xPoints, yPoints, xPoints.length);
-
-        g.setTransform(originalDebuggingTransform);
-
-        // returning here because I only want a little circle for debugging purposes
-        if (true) {
-            return;
-        }
+//        g.setColor(Color.WHITE);
+//
+//        AffineTransform originalDebuggingTransform = GraphicsUtils.rotateAroundPoint(g, bodyAngle, Game.width / 2, Game.height / 2);
+//
+//        g.fillOval(Game.width / 2 - PLAYER_RADIUS, Game.height / 2 - PLAYER_RADIUS, PLAYER_RADIUS * 2, PLAYER_RADIUS * 2);
+//        int[] xPoints = {Game.width / 2, Game.width / 2 + PLAYER_RADIUS + 10, Game.width / 2};
+//        int[] yPoints = {Game.height / 2 - 10, Game.height / 2, Game.height / 2 + 10};
+//        g.fillPolygon(xPoints, yPoints, xPoints.length);
+//
+//        g.setTransform(originalDebuggingTransform);
+//
+//        // returning here because I only want a little circle for debugging purposes
+//        if (true) {
+//            return;
+//        }
 
         BufferedImage feetImage = getAnimationImage(feetAnimationTime, animationFeetImages.get(feetAnimationState));
         int feetWidth = feetImage.getWidth() / 2;

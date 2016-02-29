@@ -33,15 +33,20 @@ public class Physics {
         Body body = world.createBody(bodyDef);
 
         for (Wall wall : level.walls) {
-            Vec2[] vertices = new Vec2[wall.vertices.length];
-            for (int i = 0; i < wall.vertices.length; i++) {
-                int[] vertex = wall.vertices[i];
-                vertices[i] = new Vec2((float) (vertex[0] / Physics.METERS_TO_PIXELS_SCALE), (float) (vertex[1] / Physics.METERS_TO_PIXELS_SCALE));
-            }
+            Point[][] physicsShapes = wall.getPhysicsShapes();
 
-            PolygonShape shape = new PolygonShape();
-            shape.set(vertices, vertices.length);
-            body.createFixture(shape, 0);
+            for (Point[] shape : physicsShapes) {
+                Vec2[] vertices = new Vec2[shape.length];
+
+                for (int i = 0; i < shape.length; i++) {
+                    Point vertex = shape[i];
+                    vertices[i] = new Vec2((float) (vertex.x / Physics.METERS_TO_PIXELS_SCALE), (float) (vertex.y / Physics.METERS_TO_PIXELS_SCALE));
+                }
+
+                PolygonShape polygonShape = new PolygonShape();
+                polygonShape.set(vertices, vertices.length);
+                body.createFixture(polygonShape, 0);
+            }
         }
     }
 }

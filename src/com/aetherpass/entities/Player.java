@@ -52,7 +52,6 @@ public class Player {
         updateFriction(delta);
         updateVelocity(delta);
 
-        // body.applyForceToCenter(new Vec2((float) velX / 1000, (float) velX / 1000));
         body.setLinearVelocity(new Vec2((float) (velX / Physics.METERS_TO_PIXELS_SCALE), (float) (velY / Physics.METERS_TO_PIXELS_SCALE)));
     }
 

@@ -1,11 +1,13 @@
 package com.aetherpass.editor;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
-import java.io.*;
 import java.util.ArrayList;
 
 public class LevelEditor extends Applet implements Runnable {
@@ -113,27 +115,20 @@ public class LevelEditor extends Applet implements Runnable {
 						editing = -1;
 
 						if (tool.equals("Export")) {
-							StringBuilder s = new StringBuilder();
+							JsonObject result = new JsonObject();
 
-							s.append("{");
-
-							s.append("\"walls\":[");
+							// collidables
+							JsonArray wallArray = new JsonArray();
 							for (int b = 0; b < level.size(); b++) {
-								if (level.get(b).collidable()) {
-									s.append(level.get(b).serialize());
-								}
-
-								if (b < level.size() - 1) {
-									s.append(",");
+								if (level.get(b).isWall()) {
+									wallArray.add(level.get(b).serialize());
 								}
 							}
-							s.append("]");
-
-							s.append("}");
+							result.add("walls", wallArray);
 
 							Toolkit toolkit = Toolkit.getDefaultToolkit();
 							Clipboard clipboard = toolkit.getSystemClipboard();
-							StringSelection strSel = new StringSelection(s.toString());
+							StringSelection strSel = new StringSelection(result.toString());
 							clipboard.setContents(strSel, null);
 						}
 						break;

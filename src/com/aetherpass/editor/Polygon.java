@@ -1,6 +1,9 @@
 package com.aetherpass.editor;
 
 import com.aetherpass.utils.MathUtils;
+import com.aetherpass.utils.Triangulator;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,7 +15,7 @@ public class Polygon extends LevelObject {
     public Polygon(int x, int y) {
         super(x, y);
         type = LevelEditor.POLYGON;
-        collidable = true;
+        isWall = true;
     }
 
     public boolean contains(int x, int y) {
@@ -118,7 +121,7 @@ public class Polygon extends LevelObject {
         return false;
     }
 
-    public String serialize() {
+    public JsonObject serialize() {
         ArrayList<Point> pointList = new ArrayList<Point>();
 
         int value = 0;
@@ -142,6 +145,24 @@ public class Polygon extends LevelObject {
             System.err.println("Something is very wrong. The area of the concave polygon is zero.");
         }
 
-        return serializeWithPoints(pointList);
+        Triangulator triangulator = new Triangulator(pointList);
+        ArrayList<Integer> earClippingVertices = triangulator.triangulate();
+
+        JsonArray triangleSerializedObjects = new JsonArray();
+        ArrayList<Point> currentTrianglePointList = new ArrayList<Point>();
+        for (int i = 0; i < earClippingVertices.size(); i++) {
+            int earClippingVertexIndex = earClippingVertices.get(i);
+            currentTrianglePointList.add(pointList.get(earClippingVertexIndex));
+
+            if ((i + 1) % 3 == 0) {
+                triangleSerializedObjects.add(serializeWithPoints(currentTrianglePointList));
+                currentTrianglePointList.clear();
+            }
+        }
+
+        JsonObject polygonSerialized = serializeWithPoints(pointList);
+        polygonSerialized.add("triangles", triangleSerializedObjects);
+
+        return polygonSerialized;
     }
 }

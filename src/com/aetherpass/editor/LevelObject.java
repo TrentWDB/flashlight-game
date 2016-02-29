@@ -1,5 +1,8 @@
 package com.aetherpass.editor;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -10,7 +13,7 @@ public class LevelObject {
 	public double angle;
 	
 	public int type;
-	protected boolean collidable;
+	protected boolean isWall;
 
 	protected int selectedVertex = -1;
 
@@ -108,41 +111,30 @@ public class LevelObject {
 		return "null";
 	}
 
-	public boolean collidable() {
-		return collidable;
+	public boolean isWall() {
+		return isWall;
 	}
 
-	public String serializeWithPoints(ArrayList<Point> pointList) {
-		// I don't want to mess with a json library for such a simple serialization
-		StringBuilder s = new StringBuilder();
+	public JsonObject serializeWithPoints(ArrayList<Point> pointList) {
+		JsonObject jsonObject = new JsonObject();
 
 		// type
-		s.append("{");
-		s.append("\"type\":\"");
-		s.append(getType());
-		s.append("\",");
+		jsonObject.addProperty("type", getType());
 
 		// vertices
-		s.append("\"vertices\": [");
-		for (int i = 0; i < pointList.size(); i++) {
-			s.append("[");
-			s.append(pointList.get(i).x);
-			s.append(",");
-			s.append(pointList.get(i).y);
-			s.append("]");
-
-			if (i < pointList.size() - 1) {
-				s.append(",");
-			}
+		JsonArray verticesArray = new JsonArray();
+		for (Point point : pointList) {
+			JsonArray vertex = new JsonArray();
+			vertex.add(point.x);
+			vertex.add(point.y);
+			verticesArray.add(vertex);
 		}
-		s.append("]");
+		jsonObject.add("vertices", verticesArray);
 
-		s.append("}");
-
-		return s.toString();
+		return jsonObject;
 	}
 	
-	public String serialize() {
+	public JsonObject serialize() {
 		return serializeWithPoints(points);
 	}
 }

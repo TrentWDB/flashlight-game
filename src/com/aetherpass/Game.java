@@ -2,14 +2,11 @@ package com.aetherpass;
 
 import com.aetherpass.engine.GameLoop;
 import com.aetherpass.engine.Physics;
-import com.aetherpass.level.Level;
 import com.aetherpass.managers.LevelManager;
 import com.aetherpass.managers.PlayerManager;
 import com.aetherpass.managers.StateManager;
-import com.aetherpass.states.GameState;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**

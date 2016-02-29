@@ -18,7 +18,8 @@ public class GameLoop implements Runnable {
         while (true) {
             GameTime.update();
 
-            StateManager.update(GameTime.getDeltaTime() / 1000.0);
+            // StateManager.update(GameTime.getDeltaTime() / 1000.0);
+            StateManager.update(0.017);
             StateManager.render(game.getGraphics());
             game.flushGraphics();
 

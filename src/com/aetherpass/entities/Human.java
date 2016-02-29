@@ -20,7 +20,7 @@ import java.util.LinkedList;
 /**
  * Created by Trent on 2/24/2016.
  */
-public class Human implements Player {
+public class Human extends Player {
     private static final int ANIMATION_STATE_FEET_IDLE = 0;
     private static final int ANIMATION_STATE_FEET_WALK_FORWARD = 1;
     private static final int ANIMATION_STATE_FEET_WALK_BACKWARD = 2;
@@ -41,18 +41,8 @@ public class Human implements Player {
     private static ArrayList<ArrayList<BufferedImage>> animationPlayerImages = new ArrayList<ArrayList<BufferedImage>>();
     private static ArrayList<ArrayList<BufferedImage>> animationPlayerNormalImages = new ArrayList<ArrayList<BufferedImage>>();
 
-    // TODO this shouldnt be set like this
-    private double posX = 800;
-    private double posY = 400;
-    private double velX;
-    private double velY;
-    private double angle;
-
     private double feetAngle;
     private double bodyAngle;
-
-    // this is the closest right angle to the players aim point, either 0, pi / 2, pi, or -pi / 2
-    private double closestRightAngle;
 
     static {
         animationFeetImages.add(ANIMATION_STATE_FEET_IDLE, new ArrayList<BufferedImage>());
@@ -82,6 +72,18 @@ public class Human implements Player {
 
         // set angles
         angle = Math.atan2(velY, velX);
+
+        updatePhysics(delta);
+
+        updateRenderingInformation();
+    }
+
+    @Override
+    public void render(Graphics2D g) {
+        renderPlayer(g);
+    }
+
+    private void updateRenderingInformation() {
         // calculate body angle
         bodyAngle = Math.atan2(GameInput.mousePos[1] - Game.height / 2, GameInput.mousePos[0] - Game.width / 2);
         // calculate feet angle
@@ -101,11 +103,6 @@ public class Human implements Player {
             // youre idle
             feetAngle = Math.round(bodyAngle / (Math.PI / 4)) * (Math.PI / 4);
         }
-    }
-
-    @Override
-    public void render(Graphics2D g) {
-        renderPlayer(g);
     }
 
     private void updateAnimation(double delta) {
@@ -166,8 +163,8 @@ public class Human implements Player {
 
         AffineTransform originalDebuggingTransform = GraphicsUtils.rotateAroundPoint(g, bodyAngle, Game.width / 2, Game.height / 2);
 
-        g.fillOval(Game.width / 2 - 30, Game.height / 2 - 30, 60, 60);
-        int[] xPoints = {Game.width / 2, Game.width / 2 + 40, Game.width / 2};
+        g.fillOval(Game.width / 2 - PLAYER_RADIUS, Game.height / 2 - PLAYER_RADIUS, PLAYER_RADIUS * 2, PLAYER_RADIUS * 2);
+        int[] xPoints = {Game.width / 2, Game.width / 2 + PLAYER_RADIUS + 10, Game.width / 2};
         int[] yPoints = {Game.height / 2 - 10, Game.height / 2, Game.height / 2 + 10};
         g.fillPolygon(xPoints, yPoints, xPoints.length);
 
@@ -184,7 +181,7 @@ public class Human implements Player {
 
         AffineTransform originalFeetTransform = GraphicsUtils.rotateAroundPoint(g, feetAngle, Game.width / 2, Game.height / 2);
 
-        g.drawImage(feetImage, (int) (posX - feetWidth / 2), (int) (posY - feetHeight / 2), feetWidth, feetHeight, null);
+        g.drawImage(feetImage, Game.width / 2 - feetWidth / 2, Game.height / 2 - feetHeight / 2, feetWidth, feetHeight, null);
 
         g.setTransform(originalFeetTransform);
 
@@ -195,7 +192,7 @@ public class Human implements Player {
 
         AffineTransform originalPlayerTransform = GraphicsUtils.rotateAroundPoint(g, bodyAngle, Game.width / 2, Game.height / 2);
 
-        g.drawImage(playerImage, (int) (posX - playerWidth / 2), (int) (posY - playerHeight / 2), playerWidth, playerHeight, null);
+        g.drawImage(playerImage, Game.width / 2 - playerWidth / 2, Game.height / 2 - playerHeight / 2, playerWidth, playerHeight, null);
 
         g.setTransform(originalPlayerTransform);
     }

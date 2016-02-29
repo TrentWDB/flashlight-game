@@ -9,13 +9,21 @@ import java.awt.*;
  * Created by Trent on 2/24/2016.
  */
 public class PlayerManager {
-    private static Player yourPlayer = new Human();
+    public static Player yourPlayer;
 
-    public static void updatePlayers(double delta) {
+    public static void initialize() {
+        yourPlayer = new Human();
+    }
+
+    public static void update(double delta) {
         yourPlayer.update(delta);
     }
 
     public static void renderPlayers(Graphics2D g) {
         yourPlayer.render(g);
+    }
+
+    public static void finalizePhysics() {
+        yourPlayer.finalizePhysics();
     }
 }

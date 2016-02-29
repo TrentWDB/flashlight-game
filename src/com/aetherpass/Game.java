@@ -1,8 +1,10 @@
 package com.aetherpass;
 
 import com.aetherpass.engine.GameLoop;
+import com.aetherpass.engine.Physics;
 import com.aetherpass.level.Level;
 import com.aetherpass.managers.LevelManager;
+import com.aetherpass.managers.PlayerManager;
 import com.aetherpass.managers.StateManager;
 import com.aetherpass.states.GameState;
 
@@ -34,7 +36,12 @@ public class Game {
         width = DEFAULT_WIDTH;
         height = DEFAULT_HEIGHT;
 
+        Physics.initialize();
+        PlayerManager.initialize();
+
         LevelManager.loadLevel(new File("level.json"));
+
+        Physics.loadLevel(LevelManager.level);
 
         StateManager.setState(StateManager.STATE_GAME);
 

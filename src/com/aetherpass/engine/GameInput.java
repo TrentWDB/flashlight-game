@@ -12,8 +12,8 @@ public class GameInput implements KeyListener, MouseInputListener {
     public static boolean[] keysDown = new boolean[256];
     public static boolean[] keysDeltaDown = new boolean[256];
     public static boolean[] keysDeltaUp = new boolean[256];
-    public static List<Integer> keysDeltaDownClear = new LinkedList<Integer>();
-    public static List<Integer> keysDeltaUpClear = new LinkedList<Integer>();
+    public static final List<Integer> keysDeltaDownClear = new LinkedList<Integer>();
+    public static final List<Integer> keysDeltaUpClear = new LinkedList<Integer>();
 
     public static boolean mouseLeftDown;
     public static boolean mouseRightDown;
@@ -25,19 +25,28 @@ public class GameInput implements KeyListener, MouseInputListener {
     public static int[] mousePosOld = new int[2];
 
     public static void clearDeltas() {
-        for (Integer keyCode : keysDeltaDownClear) {
-            keysDeltaDown[keyCode] = false;
+        synchronized (keysDeltaDownClear) {
+            for (Integer keyCode : keysDeltaDownClear) {
+                keysDeltaDown[keyCode] = false;
+            }
         }
-        for (Integer keyCode : keysDeltaUpClear) {
-            keysDeltaUp[keyCode] = false;
+        synchronized (keysDeltaUpClear) {
+            for (Integer keyCode : keysDeltaUpClear) {
+                keysDeltaUp[keyCode] = false;
+            }
         }
+
         mouseLeftDeltaDown = false;
         mouseLeftDeltaUp = false;
         mouseRightDeltaDown = false;
         mouseRightDeltaUp = false;
 
-        keysDeltaDownClear.clear();
-        keysDeltaUpClear.clear();
+        synchronized (keysDeltaDownClear) {
+            keysDeltaDownClear.clear();
+        }
+        synchronized (keysDeltaUpClear) {
+            keysDeltaUpClear.clear();
+        }
 
         mousePosOld[0] = mousePos[0];
         mousePosOld[1] = mousePos[1];
@@ -54,7 +63,10 @@ public class GameInput implements KeyListener, MouseInputListener {
 
         keysDown[keyCode] = true;
         keysDeltaDown[keyCode] = true;
-        keysDeltaDownClear.add(keyCode);
+
+        synchronized (keysDeltaDownClear) {
+            keysDeltaDownClear.add(keyCode);
+        }
     }
 
     @Override
@@ -63,7 +75,10 @@ public class GameInput implements KeyListener, MouseInputListener {
 
         keysDown[keyCode] = false;
         keysDeltaUp[keyCode] = true;
-        keysDeltaUpClear.add(keyCode);
+
+        synchronized (keysDeltaUpClear) {
+            keysDeltaUpClear.add(keyCode);
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.aetherpass.states;
 
 import com.aetherpass.Game;
 import com.aetherpass.engine.GameTime;
+import com.aetherpass.engine.Physics;
 import com.aetherpass.managers.LevelManager;
 import com.aetherpass.managers.PlayerManager;
 import com.aetherpass.utils.MathUtils;
@@ -18,7 +19,9 @@ public class GameState implements State {
     @Override
     public void update(double delta) {
         // update the players
-        PlayerManager.updatePlayers(delta);
+        PlayerManager.update(delta);
+        Physics.world.step((float) delta, Physics.VELOCITY_ITERATIONS, Physics.POSITION_ITERATIONS);
+        PlayerManager.finalizePhysics();
     }
 
     @Override

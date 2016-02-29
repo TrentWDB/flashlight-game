@@ -23,6 +23,10 @@ public class PlayerManager {
         yourPlayer.render(g);
     }
 
+    public static void interpolate(double alpha) {
+        yourPlayer.interpolate(alpha);
+    }
+
     public static void finalizePhysics() {
         yourPlayer.finalizePhysics();
     }

@@ -29,7 +29,10 @@ public class Level {
     public void render(Graphics2D g) {
         g.setColor(Color.GRAY);
 
-        AffineTransform originalFeetTransform = GraphicsUtils.translate(g, -PlayerManager.yourPlayer.posX + Game.width / 2, -PlayerManager.yourPlayer.posY + Game.height / 2);
+        AffineTransform originalFeetTransform = GraphicsUtils.translate(
+                g,
+                -PlayerManager.yourPlayer.renderX + Game.width / 2,
+                -PlayerManager.yourPlayer.renderY + Game.height / 2);
 
         for (Wall wall : walls) {
             wall.render(g);

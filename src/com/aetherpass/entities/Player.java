@@ -24,6 +24,11 @@ public class Player {
 
     public Body body;
 
+    public double renderX = 0;
+    public double renderY = 0;
+
+    public double oldPosX = 0;
+    public double oldPosY = 0;
     public double posX = 0;
     public double posY = 0;
     protected double velX;
@@ -52,6 +57,9 @@ public class Player {
     }
 
     public void finalizePhysics() {
+        oldPosX = posX;
+        oldPosY = posY;
+
         Vec2 velocity = body.getLinearVelocity();
         velX = velocity.x * Physics.METERS_TO_PIXELS_SCALE;
         velY = velocity.y * Physics.METERS_TO_PIXELS_SCALE;
@@ -59,6 +67,12 @@ public class Player {
         Vec2 position = body.getPosition();
         posX = position.x * Physics.METERS_TO_PIXELS_SCALE;
         posY = position.y * Physics.METERS_TO_PIXELS_SCALE;
+    }
+
+    public void interpolate(double alpha) {
+        double correctness = 1 - alpha;
+        renderX = posX * alpha + oldPosX * correctness;
+        renderY = posY * alpha + oldPosY * correctness;
     }
 
     public void updateFriction(double delta) {

@@ -16,9 +16,8 @@ import java.awt.*;
  */
 public class Physics {
     public static final double METERS_TO_PIXELS_SCALE = 120.0;
-    public static final int VELOCITY_ITERATIONS = 6;
-    public static final int POSITION_ITERATIONS = 2;
-    public static final boolean CAN_SLEEP = true;
+    public static final int VELOCITY_ITERATIONS = 8;
+    public static final int POSITION_ITERATIONS = 3;
 
     public static World world;
 

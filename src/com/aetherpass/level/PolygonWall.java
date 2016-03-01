@@ -11,10 +11,17 @@ public class PolygonWall extends Wall {
     private int[] xPoints;
     private int[] yPoints;
 
+    private Rectangle boundingBox;
+
     public PolygonWall(String type, Point[] vertices, TrianglePart[] triangleParts) {
         super(type, vertices);
 
         this.triangleParts = triangleParts;
+
+        int minX = Short.MAX_VALUE;
+        int minY = Short.MAX_VALUE;
+        int maxX = -Short.MAX_VALUE;
+        int maxY = -Short.MAX_VALUE;
 
         xPoints = new int[vertices.length];
         yPoints = new int[vertices.length];
@@ -22,13 +29,22 @@ public class PolygonWall extends Wall {
         for (int i = 0; i < vertices.length; i++) {
             xPoints[i] = vertices[i].x;
             yPoints[i] = vertices[i].y;
+
+            minX = Math.min(minX, xPoints[i]);
+            minY = Math.min(minY, yPoints[i]);
+            maxX = Math.max(maxX, xPoints[i]);
+            maxY = Math.max(maxY, yPoints[i]);
         }
+
+        boundingBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
 
+    @Override
     public void render(Graphics2D g) {
         g.fillPolygon(xPoints, yPoints, vertices.length);
     }
 
+    @Override
     public Point[][] getPhysicsShapes() {
         Point[][] returnShapes = new Point[triangleParts.length][3];
 
@@ -39,5 +55,10 @@ public class PolygonWall extends Wall {
         }
 
         return returnShapes;
+    }
+
+    @Override
+    public Rectangle getBoundingBox() {
+        return boundingBox;
     }
 }

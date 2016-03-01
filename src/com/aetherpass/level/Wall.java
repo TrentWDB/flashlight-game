@@ -21,4 +21,8 @@ public class Wall {
     public Point[][] getPhysicsShapes() {
         return new Point[][]{};
     }
+
+    public Rectangle getBoundingBox() {
+        return null;
+    }
 }
